@@ -47,7 +47,7 @@ func TestSingleSignAndVerify(t *testing.T) {
 	assert.Error(t, err)
 }
 
-//contains test case of Compress and Decompress both for secret key and public key
+// contains test case of Compress and Decompress both for secret key and public key
 func TestBlsManager_Decompress(t *testing.T) {
 	sk, pk := blsMgr.GenerateKey()
 	bsk, bpk := sk.Compress(), pk.Compress()
@@ -112,14 +112,6 @@ func TestBlsManager_Decompress(t *testing.T) {
 	assert.Error(t, err)
 	//dsigFromHex, err = blsMgr.DecSignatureHex(sigstr)
 	//assert.Error(t, err)
-}
-
-func TestDebug(t *testing.T) {
-	//	//valid sig: 82051c87397e54313c98ad614e3f2085e43cd2c8cb5262c8d6cc27c871b91efabbbfd13033938e8bb95fdb3da5973dfd
-	//	//panic sig: 83051c87397e54313c98ad614e3f2085e43cd2c8cb5262c8d6cc27c871b91efabbbfd13033938e8bb95fdb3da5973dfd
-	//	sigstr := "83051c87397e54313c98ad614e3f2085e43cd2c8cb5262c8d6cc27c871b91efabbbfd13033938e8bb95fdb3da5973dfd"
-	//	_, err := blsMgr.DecSignatureHex(sigstr)
-	//	assert.NoError(t, err)
 }
 
 func TestBlsManager_Aggregate(t *testing.T) {
@@ -197,7 +189,7 @@ func TestSignature_Compress(t *testing.T) {
 	assert.NotEqual(t, cb, origin)
 }
 
-//benchmark
+// benchmark
 func BenchmarkBLSSign(b *testing.B) {
 	sks := make([]SecretKey, b.N)
 	msgs := make([]Message, 0, b.N)

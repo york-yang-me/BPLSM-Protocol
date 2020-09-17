@@ -1,5 +1,5 @@
 // rewritten by york-yang according to KeyFuse Labs' code and Ven's code
-package BPLSM_protocol
+package bplsm
 
 import (
 	"github.com/bwesterb/go-ristretto"

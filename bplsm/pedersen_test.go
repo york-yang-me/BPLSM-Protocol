@@ -1,6 +1,6 @@
 // Copyright (c) 2018 Ton van de Ven
 // update by york-yang
-package BPLSM_protocol
+package bplsm
 
 import (
 	"github.com/bwesterb/go-ristretto"

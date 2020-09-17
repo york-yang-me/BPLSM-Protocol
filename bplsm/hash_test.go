@@ -1,6 +1,6 @@
 // written by KeyFuse Labs
 // update by york-yang
-package BPLSM_protocol
+package bplsm
 
 import (
 	"fmt"

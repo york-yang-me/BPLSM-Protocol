@@ -2,7 +2,6 @@ pragma solidity ^0.4.19;
 
 import "./Curve.sol";
 
-// https://en.wikipedia.org/wiki/Proof_of_knowledge#Schnorr_protocol
 library Schnorr
 {
 	function VerifyMultiSchnorr(uint256 signs, uint256[2] R, uint256[2] pb_key, uint256 sumCom) constant internal returns (bool) {

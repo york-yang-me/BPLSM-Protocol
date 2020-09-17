@@ -8,6 +8,9 @@ import (
 
 var blsMgr = NewBlsManager()
 
+/**
+unit test
+*/
 func TestBlsMgr_GenerateKey(t *testing.T) {
 	sk, pk := blsMgr.GenerateKey()
 	assert.NotEmpty(t, sk, "gen key fail")
@@ -17,14 +20,10 @@ func TestBlsMgr_GenerateKey(t *testing.T) {
 	bpk := pk.Compress()
 	bpk1 := pk1.Compress()
 	assert.EqualValues(t, bpk, bpk1, "public key not equal", bpk, bpk1)
-	//t.Log(bpk)
-	//t.Log(bpk1)
 
 	sk2, _ := blsMgr.GenerateKey()
 	bsk, bsk2 := sk.Compress(), sk2.Compress()
 	assert.NotEqual(t, bsk, bsk2, "should not generate two same key", bsk, bsk2)
-	//t.Log(bsk)
-	//t.Log(bsk2)
 }
 
 func TestSingleSignAndVerify(t *testing.T) {
@@ -189,6 +188,9 @@ func TestSignature_Compress(t *testing.T) {
 	assert.NotEqual(t, cb, origin)
 }
 
+/**
+stress test
+*/
 // benchmark
 func BenchmarkBLSSign(b *testing.B) {
 	sks := make([]SecretKey, b.N)
@@ -200,17 +202,6 @@ func BenchmarkBLSSign(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		sks[i].Sign(msgs[i])
-	}
-}
-
-func BenchmarkBLSVerify(b *testing.B) {
-	sk, pk := blsMgr.GenerateKey()
-	m := Message(">16 character identical message")
-	sig := sk.Sign(m)
-
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		pk.Verify(m, sig) //nolint:errcheck
 	}
 }
 
@@ -226,6 +217,34 @@ func BenchmarkBLSAggregateSignature(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		blsMgr.Aggregate(sigs) //nolint:errcheck
+	}
+}
+
+func BenchmarkBLSAggregateSignatureN(b *testing.B) {
+	m := Message("message to be signed. 将要做签名的消息")
+	n := 3
+	sigs := make([]Signature, 0, n) //signatures for the same message
+	msgs := make([]Message, 0, n)
+	for i := 0; i < n; i++ {
+		msg := append(m, byte(i))
+		sk, _ := blsMgr.GenerateKey()
+		sigs = append(sigs, sk.Sign(msg))
+		msgs = append(msgs, msg)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		blsMgr.Aggregate(sigs) //nolint:errcheck
+	}
+}
+
+func BenchmarkBLSVerify(b *testing.B) {
+	sk, pk := blsMgr.GenerateKey()
+	m := Message(">16 character identical message")
+	sig := sk.Sign(m)
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		pk.Verify(m, sig) //nolint:errcheck
 	}
 }
 
@@ -249,23 +268,7 @@ func BenchmarkBlsManager_VerifyAggregatedOne(b *testing.B) {
 	}
 }
 
-func BenchmarkBLSAggregateSignatureN(b *testing.B) {
-	m := Message("message to be signed. 将要做签名的消息")
-	n := 3
-	sigs := make([]Signature, 0, n) //signatures for the same message
-	msgs := make([]Message, 0, n)
-	for i := 0; i < n; i++ {
-		msg := append(m, byte(i))
-		sk, _ := blsMgr.GenerateKey()
-		sigs = append(sigs, sk.Sign(msg))
-		msgs = append(msgs, msg)
-	}
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		blsMgr.Aggregate(sigs) //nolint:errcheck
-	}
-}
-
+// the aggregate method has been tested in smart contract successfully
 func BenchmarkBlsManager_VerifyAggregatedN(b *testing.B) {
 	m := Message("message to be signed. 将要做签名的消息")
 	n := 3

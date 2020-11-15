@@ -128,11 +128,10 @@ func (party *BPLSMParty) Phase4(sharePub *PubKey, shareR *secp256k1.Scalar) ([]b
 	prv := party.prv
 	pub := sharePub
 	curve := party.curve
-	scalarR := party.r
 	shareScalarR := shareR
 
 	// sumCom = int(hash(bytes(x(R)) || bytes(dG) || Com)) mod n
-	sumCom := schnorr.GetE(curve, Com, pub.X, pub.Y, schnorr.IntToByte(scalarR.X))
+	sumCom := schnorr.GetE(curve, Com, pub.X, pub.Y, schnorr.IntToByte(shareR.X))
 
 	// ed
 	ed := new(big.Int)
